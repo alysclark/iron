@@ -6988,7 +6988,6 @@ CONTAINS
     ELSE
       CALL FlagError("Interpolated point is not associated.",ERR,ERROR,*999)
     ENDIF
-
     EXITS("FIELD_INTERPOLATE_XI")
     RETURN
 999 ERRORSEXITS("FIELD_INTERPOLATE_XI",ERR,ERROR)
@@ -29371,7 +29370,7 @@ CONTAINS
     INTEGER(INTG), INTENT(IN) :: DERIVATIVE_NUMBER !<The derivative number of the field to interpolate.
     INTEGER(INTG), INTENT(IN) :: USER_ELEMENT_NUMBER !<The user element number to interpolate.
     REAL(DP), INTENT(IN) :: XI(:) !<The set of element xi to interpolate the field at.
-    REAL(DP), INTENT(OUT) :: VALUES(:) !<On return, the interpolated field values.
+    REAL(DP), INTENT(OUT) :: VALUES(:,:) !<On return, the interpolated field values.
     INTEGER(INTG), INTENT(OUT) :: ERR !<The error code.
     TYPE(VARYING_STRING), INTENT(OUT) :: ERROR !<The error string.
     !Local Variables
@@ -29404,12 +29403,21 @@ CONTAINS
                     CALL FIELD_INTERPOLATION_PARAMETERS_ELEMENT_GET(FIELD_VALUES_SET_TYPE,USER_ELEMENT_NUMBER, &
                       & INTERPOLATED_PARAMETERS(VARIABLE_TYPE)%PTR,ERR,ERROR,*999)
                     CALL FIELD_NUMBER_OF_COMPONENTS_GET(FIELD,VARIABLE_TYPE,numberOfComponents,ERR,ERROR,*999)
-                    IF(SIZE(VALUES)==numberOfComponents) THEN
+                    IF(SIZE(VALUES,1)==numberOfComponents) THEN
                       IF(SIZE(XI)==DOMAIN_ELEMENTS%ELEMENTS(USER_ELEMENT_NUMBER)%BASIS%NUMBER_OF_XI) THEN
                         CALL FIELD_INTERPOLATE_XI(DERIVATIVE_NUMBER,XI(:),INTERPOLATED_POINT(VARIABLE_TYPE)%PTR, &
                           & ERR,ERROR,*999)
-                        VALUES(1:numberOfComponents)=INTERPOLATED_POINT(VARIABLE_TYPE)%PTR% &
-                          & VALUES(1:numberOfComponents,DERIVATIVE_NUMBER)
+                        IF(DERIVATIVE_NUMBER.EQ.1)THEN
+                          VALUES(1:numberOfComponents,DERIVATIVE_NUMBER)=INTERPOLATED_POINT(VARIABLE_TYPE)%PTR% &
+                            & VALUES(1:numberOfComponents,DERIVATIVE_NUMBER)
+                        ELSEIF(DERIVATIVE_NUMBER.eq.2)THEN
+                          VALUES(1:numberOfComponents,1)=INTERPOLATED_POINT(VARIABLE_TYPE)%PTR% &
+                            & VALUES(1:numberOfComponents,DERIVATIVE_NUMBER)
+                          VALUES(1:numberOfComponents,2)=INTERPOLATED_POINT(VARIABLE_TYPE)%PTR% &
+                            & VALUES(1:numberOfComponents,4)
+                          VALUES(1:numberOfComponents,3)=INTERPOLATED_POINT(VARIABLE_TYPE)%PTR% &
+                            & VALUES(1:numberOfComponents,7)
+                        ENDIF
                       ELSE
                         LOCAL_ERROR="The specified xi to interpolate the field at are invalid. "// &
                           & "The supplied size is "// &

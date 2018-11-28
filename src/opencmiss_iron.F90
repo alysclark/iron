@@ -1310,6 +1310,15 @@ MODULE OpenCMISS_Iron
   INTEGER(INTG), PARAMETER :: CMFE_DOUBLE_COMPLEX_TYPE = DOUBLE_COMPLEX_TYPE !<Double precision complex data type \see OpenCMISS_DataTypeConstants,OpenCMISS
   INTEGER(INTG), PARAMETER :: CMFE_QUADRUPLE_COMPLEX_TYPE = QUADRUPLE_COMPLEX_TYPE !<Quadruple precision complex data type \see OpenCMISS_DataTypeConstants,OpenCMISS
   !>@}
+  !> \addtogroup OpenCMISS_PartialDerivativeConstants OpenCMISS::Iron::Constants::PartialDerivativeConstants
+  !> \brief Partial derivative constant identifiers
+  !> \see OpenCMISS_CONSTANTS,OpenCMISS
+  !>@{
+  INTEGER(INTG), PARAMETER :: CMFE_NO_PART_DERIV = NO_PART_DERIV !<No partial derivative i.e., u \see OpenCMISS_PartialDerivativeConstants,OpenCMISS
+  INTEGER(INTG), PARAMETER :: CMFE_FIRST_PART_DERIV = FIRST_PART_DERIV !<First partial derivative i.e., du/ds \see OpenCMISS_PartialDerivativeConstants,OpenCMISS
+  INTEGER(INTG), PARAMETER :: CMFE_SECOND_PART_DERIV = SECOND_PART_DERIV !<Second partial derivative i.e., d^2u/ds^2 \see OpenCMISS_PartialDerivativeConstants,OpenCMISS
+  INTEGER(INTG), PARAMETER :: CMFE_THIRD_PART_DERIV = THIRD_PART_DERIV !<Third partial derivative i.e., d^3u/ds^3 \see OpenCMISS_PartialDerivativeConstants,OpenCMISS
+  !>@}
   !> \addtogroup OpenCMISS_GlobalDerivativeConstants OpenCMISS::Iron::Constants::GlobalDerivativeConstants
   !> \brief Global derivative constant identifiers
   !> \see OpenCMISS_CONSTANTS,OpenCMISS
@@ -1347,6 +1356,8 @@ MODULE OpenCMISS_Iron
   PUBLIC CMFE_INTEGER_TYPE,CMFE_SHORT_INTEGER_TYPE,CMFE_LONG_INTEGER_TYPE,CMFE_SINGLE_REAL_TYPE,CMFE_DOUBLE_REAL_TYPE, &
     & CMFE_QUADRAUPLE_REAL_TYPE,CMFE_CHARACTER_TYPE,CMFE_LOGICAL_TYPE,CMFE_SINGLE_COMPLEX_TYPE,CMFE_DOUBLE_COMPLEX_TYPE, &
     & CMFE_QUADRUPLE_COMPLEX_TYPE
+
+  PUBLIC CMFE_NO_PART_DERIV,CMFE_FIRST_PART_DERIV,CMFE_SECOND_PART_DERIV,CMFE_THIRD_PART_DERIV
 
   PUBLIC CMFE_NO_GLOBAL_DERIV,CMFE_GLOBAL_DERIV_S1,CMFE_GLOBAL_DERIV_S2,CMFE_GLOBAL_DERIV_S1_S2, &
     & CMFE_GLOBAL_DERIV_S3,CMFE_GLOBAL_DERIV_S1_S3,CMFE_GLOBAL_DERIV_S2_S3,CMFE_GLOBAL_DERIV_S1_S2_S3
@@ -36031,7 +36042,7 @@ CONTAINS
     INTEGER(INTG), INTENT(IN) :: derivativeNumber !<The derivative number of the field to interpolate.
     INTEGER(INTG), INTENT(IN) :: userElementNumber !<The user element number of the field to interpolate.
     REAL(DP), INTENT(IN) :: xi(:) !<The element xi to interpolate the field at.
-    REAL(DP), INTENT(OUT) :: values(:) !<The interpolated values.
+    REAL(DP), INTENT(OUT) :: values(:,:) !<The interpolated values.
     INTEGER(INTG), INTENT(OUT) :: err !<The error code.
     !Local variables
     TYPE(FIELD_TYPE), POINTER :: field
@@ -36071,7 +36082,7 @@ CONTAINS
     INTEGER(INTG), INTENT(IN) :: derivativeNumber !<The derivative number of the field to interpolate.
     INTEGER(INTG), INTENT(IN) :: userElementNumber !<The user element number of the field to interpolate.
     REAL(DP), INTENT(IN) :: xi(:) !<The element xi to interpolate the field at.
-    REAL(DP), INTENT(OUT) :: values(:) !<The interpolated values.
+    REAL(DP), INTENT(OUT) :: values(:,:) !<The interpolated values.
     INTEGER(INTG), INTENT(OUT) :: err !<The error code.
     !Local variables
 
